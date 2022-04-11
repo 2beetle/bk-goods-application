@@ -80,7 +80,12 @@ let canceling = true
 let pageMethodExecuting = true
 
 router.beforeEach(async (to, from, next) => {
-    if (!store.state.user.userInfo.isScretary && !store.state.user.userInfo.isLeader && to.name === 'applyManagement') {
+    // 没有组id访问其他页面进行重定向
+    // if (!store.state.user.userOrgId) {
+    //     router.push({ name: 'home' })
+    // }
+    // 非管理员不可通过url访问申请管理页
+    if (!store.state.user.userInfo.isScretary && to.name === 'applyManagement') {
         router.push({ name: 'applyHome' })
     }
     canceling = true

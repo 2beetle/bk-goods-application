@@ -321,7 +321,7 @@
                     const college = this.collegeList.find(obj => obj.id === this.formData.college)
                     applyObj['academy'] = college ? college.name : ''
                     applyList.push(applyObj)
-                    this.$http.post(commitApplyUrl, { apply_list: applyList }).then(res => {
+                    this.$http.post(commitApplyUrl, { apply_list: applyList, org_id: 10001 }).then(res => {
                         if (res.result === true) {
                             this.handleError({ theme: 'success' }, res.message)
                             this.sleep(2).then(res => {

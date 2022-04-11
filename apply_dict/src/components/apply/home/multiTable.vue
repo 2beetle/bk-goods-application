@@ -261,7 +261,7 @@
                 this.getBase64(file.fileObj.origin).then(res => {
                     const excelFile = res.split(',')[1] // 获取文件信息
                     const fileName = this.userInfo.username + '_' + file.fileObj.name // 获取文件名
-                    this.$http.post(analysisExcelUrl, { file: excelFile, fileName: fileName }).then(res => {
+                    this.$http.post(analysisExcelUrl, { file: excelFile, fileName: fileName, org_id: 10001 }).then(res => {
                         if (res && res.result === true) {
                             // 全部导入成功
                             this.handleError({ theme: 'success' }, res.message)

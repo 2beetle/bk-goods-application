@@ -196,7 +196,10 @@
         methods: {
             getApply () { // 获取申请列表
                 this.$http.get(getApplyUrl, {
-                    params: this.getParams
+                    params: {
+                        ...this.getParams,
+                        'org_id': 10001
+                    }
                 }).then(res => {
                     if (res) {
                         this.apply = res.data.apply_list
@@ -260,7 +263,7 @@
                         examineApplyParamsIdList = this.selected.selectedRows
                     }
                     const remark = this.remark
-                    this.$http.post(examineApplyUrl, { apply_id_list: examineApplyParamsIdList, model: 'agree', remark: remark }).then(res => {
+                    this.$http.post(examineApplyUrl, { apply_id_list: examineApplyParamsIdList, model: 'agree', remark: remark, org_id: 10001 }).then(res => {
                         if (res.result === true) {
                             this.handleError({ theme: 'success' }, res.message)
                         } else if (res.result === false) {
@@ -285,7 +288,7 @@
                         examineApplyParamsIdList = this.selected.selectedRows
                     }
                     const remark = this.remark
-                    this.$http.post(examineApplyUrl, { apply_id_list: examineApplyParamsIdList, model: 'reject', remark: remark }).then(res => {
+                    this.$http.post(examineApplyUrl, { apply_id_list: examineApplyParamsIdList, model: 'reject', remark: remark, org_id: 10001 }).then(res => {
                         if (res.result === true) {
                             this.handleError({ theme: 'success' }, res.message)
                         } else if (res.result === false) {

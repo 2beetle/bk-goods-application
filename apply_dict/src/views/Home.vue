@@ -93,6 +93,7 @@
 
 <script>
     import { mapState } from 'vuex'
+    import { GetUserOrgIdUrl } from '@/pattern'
     export default {
         data () {
             return {
@@ -104,9 +105,17 @@
                 userInfo: state => state.user.userInfo
             })
         },
+        created () {
+            this.getOrgId()
+        },
         methods: {
             changeCollapse (val) {
                 this.$refs.carousel.setActiveItem(val)
+            },
+            getOrgId () {
+                this.$http.get(GetUserOrgIdUrl).then(res => {
+                    console.log('id res', res)
+                })
             }
         }
     }

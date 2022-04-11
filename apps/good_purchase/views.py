@@ -157,15 +157,16 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserInfoSerializer
 
     def list(self, request, *args, **kwargs):
-        req = request.data
+        req = request.GET
         org_id = req.get("org_id")
         valid_user_in_the_org(org_id, request.user.username)
         user_id = self.queryset.filter(username=request.user.username).first().id
         user_info = {
             'id': self.queryset.filter(username=request.user.username).first().id,
             'username': request.user.username,
-            'phone': UserProperty.filter(user_id=user_id, key='phone').first().value,
-            'position': UserProperty.filter(user_id=user_id, key='position').first().value,
+            'phone': UserProperty.objects.filter(user_id=user_id, key='phone').first().value,
+            'position': UserProperty.objects.filter(user_id=user_id, key='position').first().value if
+            UserProperty.objects.filter(user_id=user_id, key='position').first() else None,
             'isScretary': False,
         }
         flag = if_secretary(request, org_id)

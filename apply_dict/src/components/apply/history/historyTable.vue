@@ -206,7 +206,8 @@
                         reason: this.getParams.reason,
                         status: this.getParams.status,
                         page: this.getParams.page,
-                        size: this.getParams.size
+                        size: this.getParams.size,
+                        org_id: 10001
                     }
                 }).then(res => {
                     this.history = res.data.apply_list
@@ -292,7 +293,8 @@
                     good_code: row.good_code,
                     good_name: row.good_name,
                     num: row.num,
-                    reason: row.reason
+                    reason: row.reason,
+                    org_id: 10001
                 }).then(res => {
                     if (res.result === true) {
                         this.handleError({ theme: 'success' }, res.message)

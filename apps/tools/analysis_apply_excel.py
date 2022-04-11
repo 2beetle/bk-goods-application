@@ -78,7 +78,7 @@ def analysis_apply_excel(request):
     valid_user_in_the_org(org_id, username)
 
     # 获取组名拼接dir_path
-    org_name = Organization.objects.filter(id=org_id).first().org_name
+    org_name = Organization.objects.filter(id=org_id).first().group_name
 
     dir_path = os.path.join(org_name, 'analysis_apply_excel')
     file, file_path = tool_get_import_file(body, dir_path, 'file', 'fileName')

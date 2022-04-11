@@ -15,7 +15,6 @@ def tool_paginator(req_data, model, query, params_page, params_size):
     page = check_param_page(page)
     size = req_data.get(params_size, 10)
     size = check_param_size(size)
-
     queryset = model.objects.filter(query).order_by("-update_time")
     total_num = queryset.count()
     paginator = Paginator(queryset, size)

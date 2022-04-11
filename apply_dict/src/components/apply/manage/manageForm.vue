@@ -191,7 +191,7 @@
                 }
                 this.formData.college = 0
                 const parentCode = this.getParentCode(val)
-                this.$http.get(getSubPositionListUrl, { params: { parent_code: parentCode } }).then(res => {
+                this.$http.get(getSubPositionListUrl, { params: { parent_code: parentCode, org_id: 10001 } }).then(res => {
                     this.collegeList = res.data
                 })
             }
@@ -202,14 +202,16 @@
         },
         methods: {
             getApplyUser () { // 获取小组成员
-                this.$http.get(getApplyUserUrl).then(res => {
+                this.$http.get(getApplyUserUrl, { params: { org_id: 10001 } }).then(res => {
                     if (res) {
                         this.applicantList = res.data
                     }
                 })
             },
             getRootPositionList () { // 获取校区列表
-                this.$http.get(getRootPositionListUrl).then(res => {
+                this.$http.get(getRootPositionListUrl, { params: {
+                    org_id: 10001
+                } }).then(res => {
                     this.campusList = res.data
                 })
             },

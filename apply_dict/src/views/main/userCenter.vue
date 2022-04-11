@@ -186,7 +186,9 @@
                 this.getPosition()
             },
             getPosition () { // 获得所有地点
-                this.$http.get(getPositionsUrl).then(res => {
+                this.$http.get(getPositionsUrl, { params: {
+                    org_id: 10001
+                } }).then(res => {
                     if (res) {
                         if (res && res.result === true) {
                             this.locationList = res.data
@@ -209,7 +211,7 @@
                 })
             },
             submitEdit () {
-                this.$http.post(editUserInfoUrl, { phone: this.userInfo.phone, position: this.userInfo.position }).then(res => {
+                this.$http.post(editUserInfoUrl, { phone: this.userInfo.phone, position: this.userInfo.position, org_id: 10001 }).then(res => {
                     if (res) {
                         if (res && res.result === true) {
                             this.handleError({ theme: 'success' }, res.message)

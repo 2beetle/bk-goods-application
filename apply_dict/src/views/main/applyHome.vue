@@ -42,7 +42,7 @@
                     <bk-row style="margin-bottom: 25px;">
                         <bk-col :span="12">
                             <div class="leaders">
-                                <bk-form-item label="导员">
+                                <bk-form-item label="管理员">
                                     <bk-tag>{{ multiInput.leaders }}</bk-tag>
                                 </bk-form-item>
                             </div>
@@ -139,7 +139,7 @@
 <script>
     import { mapState } from 'vuex'
     import {
-        getRootPositionListUrl, getSubPositionListUrl, getLeadersUrl, commitApplyUrl
+        getRootPositionListUrl, getSubPositionListUrl, commitApplyUrl, getSecretaryUrl
     } from '@/pattern'
     import ApplyForm from '@/components/apply/home/applyForm.vue'
     import MultiTable from '@/components/apply/home/multiTable.vue'
@@ -186,6 +186,7 @@
         },
         created () {
             this.loadData() // 创建实例时加载数据
+            this.getSecretary() // 获取本组秘书
         },
         mounted () {
             this.$store.commit('updateViewInfo', {
@@ -196,20 +197,23 @@
         methods: {
             loadData () {
                 this.getRootPositionList()
-                this.getLeaders()
             },
-            getLeaders () {
-                this.$http.get(getLeadersUrl).then(res => {
+            getSecretary () {
+                this.$http.get(getSecretaryUrl, {
+                    params: {
+                        org_id: 10001
+                    }
+                }).then(res => {
                     if (res) {
-                        if (res.result === true && res.code !== '220') {
-                            this.leaders = res.data
+                        for (let index = 0; index < res.data.length; index++) {
+                            this.multiInput.leaders = index !== 0 ? this.multiInput.leaders + ',' + res.data[index].username : res.data[index].username
                         }
                     }
                 })
             },
             changeCollegeList (val) {
                 const parentCode = this.getParentCode(val)
-                this.$http.get(getSubPositionListUrl, { params: { parent_code: parentCode } }).then(res => {
+                this.$http.get(getSubPositionListUrl, { params: { parent_code: parentCode, org_id: 10001 } }).then(res => {
                     this.collegeList = res.data
                 })
             },
@@ -224,7 +228,9 @@
                 return parentCode
             },
             getRootPositionList () { // 获取校区列表
-                this.$http.get(getRootPositionListUrl).then(res => {
+                this.$http.get(getRootPositionListUrl, { params: {
+                    org_id: 10001
+                } }).then(res => {
                     this.campusList = res.data
                 })
             },
@@ -260,7 +266,7 @@
                     const allApplyIdx = allSuccessApply.indexOf(applyList[index])
                     allSuccessApply.splice(allApplyIdx, 1)
                 }
-                this.$http.post(commitApplyUrl, { apply_list: applyList }).then(res => {
+                this.$http.post(commitApplyUrl, { apply_list: applyList, org_id: 10001 }).then(res => {
                     if (res.result === true) {
                         this.handleError({ theme: 'success' }, res.message)
                     } else if (res.result === false) {

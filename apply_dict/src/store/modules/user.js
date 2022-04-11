@@ -1,7 +1,8 @@
 import http from '@/api'
 
 const state = {
-    userInfo: {}
+    userInfo: {},
+    userOrgId: ''
 }
 
 const getters = {
@@ -16,7 +17,9 @@ const actions = {
          * @return {Promise} promise 对象
          */
     userInfo (context, config = {}) {
-        return http.get(USER_INFO_URL, {}, config).then(response => {
+        return http.get(USER_INFO_URL, { params: {
+            org_id: 10001
+        } }, config).then(response => {
             const userData = response.data || {}
             context.commit('setUserInfo', userData)
             return userData
@@ -33,6 +36,9 @@ const mutations = {
          */
     setUserInfo (state, userInfo) {
         state.userInfo = userInfo
+    },
+    setUserOrgId (state, UserOrgId) {
+        state.UserOrgId = UserOrgId
     }
 }
 

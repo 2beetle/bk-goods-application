@@ -251,7 +251,7 @@ class ApplyViewSet(viewsets.ModelViewSet):
         req_data = request.GET
         org_id = req_data.get('org_id', None)
         valid_user_in_the_org(org_id, username)
-        sql_str = sql_str + 'and apply.org_id = {}'.format(org_id)
+        sql_str = sql_str + 'and apply.org_id = {} '.format(org_id)
         # 时间-范围查询
         start_time, end_time = tool_get_start_end(req_data, 'start_time', 'end_time')
         params.append(start_time)
@@ -273,7 +273,7 @@ class ApplyViewSet(viewsets.ModelViewSet):
         if status and isinstance(status, str):
             status = int(status)
         if isinstance(status, int):
-            sql_str = sql_str + 'and apply.status = {}'.format(status)
+            sql_str = sql_str + 'and apply.status = {} '.format(status)
 
         # 根据id查询
         apply_id = req_data.get('id', None)
@@ -431,10 +431,6 @@ class ApplyViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False)
     def get_apply_status(self, request):
         """获取所有申请状态"""
-        req_data = request.GET
-        username = request.user.username
-        org_id = req_data.get('org_id', None)
-        valid_user_in_the_org(org_id, username)
         apply_status_list = []
         for item in Apply.STATUS_TYPE:
             apply_status_list.append({'id': item[0], 'name': item[1]})
@@ -447,6 +443,15 @@ class OrganizationMemberViewSet(viewsets.ModelViewSet):
     """
     queryset = OrganizationMember.objects.all()
     serializer_class = OrganizationMemberSerializer
+
+    @action(methods=['GET'], detail=False)
+    def get_user_org_id(self, request):
+        """获取user所在的的org_id"""
+        username = request.user.username
+        org_id_queryset = self.queryset.filter(username=username).values_list('org_id',
+                                                                              flat=True)
+        org_id_list = list(org_id_queryset)
+        return JsonResponse(success_code(org_id_list))
 
     @action(methods=['GET'], detail=False)
     def get_org_users(self, request):
@@ -710,8 +715,9 @@ class SecretaryViewSet(viewsets.ModelViewSet):
     def get_org_secretary(self, request):
         """获取秘书"""
         # 身份校验
-        org_id = request.data.get('org_id')
+        org_id = request.GET.get('org_id')
         username = request.user.username
+        print('org_id', org_id)
         if not org_id:  # 获取所有秘书
             secs = [sec.to_json() for sec in self.queryset]
             return JsonResponse(success_code(secs))
